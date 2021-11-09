@@ -1,0 +1,210 @@
+\documentclass{beamer}
+\usepackage[T1]{fontenc}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage[italian]{babel}
+\usepackage{mathrsfs}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsbsy}
+\usepackage{amsthm}
+\usepackage{enumerate}
+\usepackage{quoting}
+\quotingsetup{font=small}
+\usepackage{diagbox}
+\usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{version}
+\usepackage{multicol}
+\usepackage{beamerfoils}
+
+\theoremstyle{plain}
+\newtheorem{Proposizione}{Proposizione}
+\newtheorem{Corollario}{Corollario}
+\newtheorem*{Definizione}{Definizione}
+\newtheorem{Teorema}{Teorema}
+%\newtheorem{Lemma}{Lemma}
+
+%\def\avint{\mathop{\,\rlap{-}\!\!\int}\nolimits}
+
+%\newcommand{\eqdef}{\stackrel{\mathrm{def}}{:=}}
+
+\usepackage{appendixnumberbeamer}
+\usetheme{Ilmenau}
+\setbeamertemplate{footline}[frame number]{}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercovered{highly dynamic}
+
+\title{\LARGE{\textbf{Progetto bayesian}}}
+\author{\texorpdfstring{Francesca Di Filippo  Elena Musiari marta enrico gabriele}{Candidato}}
+\institute[Polimi]{Bayesian Statistics\\{Politecnico di Milano}\\A.A.2021-2022}
+%\institute{Universit\`a degli Studi di Parma}
+%\date{24 Luglio 2020} 
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Struttura dell'elaborato}
+\tableofcontents
+\end{frame}
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+\begin{section}{ABC}
+\begin{frame}{Initial problem}
+	Problem: computationally prohibitive (or unavailable) evaluation of the likelihood function
+	
+	\vspace{1cm}
+	Given the posterior distribution $\pi(\theta | y_{obs}) = \frac{p(y_{obs}|\theta) \pi(\theta)}{\int _{\Theta }p(y_{obs}|\theta) \pi(\theta) d\theta }$ 
+\end{frame}
+
+\begin{frame}{Approach}
+	To solve this issue we can use methods based on the approximation of the likelihood function, called \textit{Likelihood-free methods}.
+	\vspace{0.2cm}
+	
+	\emph{Inputs:}
+	\begin{itemize}
+		\item A target posterior density $\pi(\theta | y_{obs}) \propto p(y_{obs}|\theta) \pi(\theta)$, consisting of a prior distribution $\pi(\theta)$ and a procedure of generating data under the model $p(y_{obs}|\theta)$.
+		\item A proposal density $g(\theta)$, with $g(\theta)\textgreater 0 $ if $\pi(\theta | y_{obs}) \textgreater 0$.
+		\item An integer $N \textgreater0$.
+	\end{itemize}
+	\emph{Sampling:} for $i= 1,..., N$:
+	\begin{enumerate}
+		\item Generate $\theta ^ {(i)} \sim g(\theta)$ from sampling density $g$.
+		\item Generate $ y \sim p(y|\theta ^ {(i)})$ from the likelihood.
+		\item If $y=y_{obs}$, then accept $\theta ^ {(i)}$ with probability $\frac{\pi(\theta ^ {(i)})}{K g(\theta ^ {(i)})}$, where $K \geq \max_{\theta}{\frac{\pi(\theta)}{g(\theta)}}$. Else go to 1.
+	\end{enumerate}
+	\emph{Output:}
+	
+	A set of parameter vectors $\theta ^ {(1)},..., \theta ^ {(N)}$ which are samples from $\pi(\theta |y_{obs})$.
+	
+	%Balance: avoid the likelihood evaluation VS computational inefficiency
+	
+
+\end{frame}
+
+\begin{frame}{Likelihood-free}
+	Is this an efficient method for complex analysis?
+	
+	\vspace{0.3cm}
+	(3)If $\parallel y-y_{obs}\parallel \leq h$, then accept $\theta ^ {(i)}$ with probability $\frac{\pi(\theta ^ {(i)})}{K g(\theta ^ {(i)})}$, where $K \geq \maxof{\theta}{\frac{\pi(\theta)}{g(\theta)}}$. 
+	
+	Else go to 1.
+	
+	\vspace{0.5cm}
+	
+	This adjust the potentially very low (or zero) probability requirement that $y = y_{obs}$ exactly.
+\end{frame}
+
+\begin{frame}{ABC}
+	We focused on a particular case of the Likelihood-free methods: the \emph{Approximate Bayesian Computation (ABC)}.
+	
+	\vspace{0.5cm}
+	
+	The aim: find a practical way of performing Bayesian analysis, while keeping the approximation and the computation to a minimum.
+	
+	\vspace{0.5cm}
+	The likelihood-free rejection algorithm is sampling from the joint distribution $\propto \mathbb{I}(\parallel y-y_{obs} \parallel \leq h)p(y|\theta)\pi(\theta)$
+	
+	
+	$\Longrightarrow$ replace the indicator function with a standard smoothing kernel function $K_h(u)$, with $u=\parallel y-y_{obs} \parallel$:
+	\[ K_h(u)  =  \frac{1}{h}  K  ( \frac{u}{h} )  \]
+	
+	
+	\vspace{0.2cm}
+	Hence:
+	\[\pi_{ABC}(\theta, y | y_{obs}) \propto K_h(u)p(y|\theta)\pi(\theta)\]
+	
+	
+\end{frame}
+
+\begin{frame}{ABC - summary statistics}
+	Is this feasible in practice?
+	
+	\vspace{0.5cm}
+	In practice: difficult to have $y\approx y_{obs}$ from $p(y|\theta)$, unless $y_{obs}$ very low dimensional or $p(y|\theta)$ factorises into low-dimensional components.
+	
+	Thus we should use a large $h$, obtaining a poor posterior approximation!
+	
+	$\Longrightarrow$ use summary statistics $s = S(y)$
+	
+	\[  \pi_{ABC} (\theta | s_{obs})   \]
+\end{frame}
+
+\begin{frame}{Summary statistics}
+
+	Critical decision: choice of summary statistics
+	
+	\vspace{0.3cm}
+	Dimension of summary statistics:
+	\begin{itemize}
+		\item large enough to contain as much as informations about observed data as possible
+		\item low enough to avoid curse of dimensionality of matching $s$ and $s_{obs}$
+	\end{itemize}
+
+	\vspace{0.3cm}
+	$\Longrightarrow$ choose sufficient statistics, such that:
+	\[   \pi(\theta|s_{obs}) \equiv \pi(\theta|y_{obs})   \]
+
+\end{frame}
+
+\begin{frame}{Distance measure}
+	Distance measure: substantial impact on ABC algorithm efficiency
+	
+	\[  \parallel s - s_{obs} \parallel = (s - s_{obs})^\top \Sigma^{-1} (s - s_{obs}) \]
+	
+	\begin{itemize}
+		\item $\Sigma = $ identity matrix $ \rightarrow$ Euclidean distance 
+		\item $\Sigma =$ diagonal matrix of non-zero weights $ \rightarrow$ Weighted Euclidean distance 
+		\item $\Sigma = $ full covariance matrix of $s \rightarrow$ Mahalanobis distance 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{ABC algorithm}
+	\emph{Inputs:}
+	\begin{itemize}
+		\item A target posterior density $\pi(\theta | y_{obs}) \propto p(y_{obs}|\theta) \pi(\theta)$, consisting of a prior distribution $\pi(\theta)$ and a procedure of generating data under the model $p(y_{obs}|\theta)$.
+		\item A proposal density $g(\theta)$, with $g(\theta)\textgreater 0 $ if $\pi(\theta | y_{obs}) \textgreater 0$.
+		\item An integer $N \textgreater0$.
+		\item A kernel function $K_h(u)$ and a scale parameter $h \textgreater 0$.
+		\item A low dimensional vector of summary statistics $s=S(y)$.
+	\end{itemize}
+	\emph{Sampling:} for $i= 1,..., N$:
+	\begin{enumerate}
+		\item Generate $\theta ^ {(i)} \sim g(\theta)$ from sampling density $g$.
+		\item Generate $ y \sim p(y|\theta ^ {(i)})$ from the likelihood.
+		\item Compute summary statistic $s = S(y)$.
+		\item Accept $\theta ^ {(i)}$ with probability $\frac{K_h(\parallel s-s_{obs}\parallel)   \pi(\theta ^ {(i)})}{K g(\theta ^ {(i)})}$, where $K \geq K_h(0)\max_{\theta}{\frac{\pi(\theta)}{g(\theta)}}$. Else go to 1.
+	\end{enumerate}
+	\emph{Output:}
+	
+	A set of parameter vectors $\theta ^ {(1)},..., \theta ^ {(N)} \sim \pi_{ABC}(\theta |S_{obs})$.
+	
+	We can add a stopping rule to the ABC Rejection Sampling Algorithm.
+\end{frame}
+	
+\end{section}
+
+
+
+
+
+
+\begin{frame}
+\vspace{1.1cm}
+\centering
+{\LARGE Grazie per l'attenzione!}
+\end{frame}
+
+
+\end{document}
