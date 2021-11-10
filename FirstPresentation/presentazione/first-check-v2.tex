@@ -24,6 +24,7 @@
 
 \usepackage[none]{hyphenat} %avoid hyphenation
 \usepackage{xcolor} %to uset \textcolor
+\usepackage{bbm} %funzione indicatrice
 % end pacchetti
 
 \usetheme[bgphoto]{polimi}
@@ -88,12 +89,16 @@
  		
  		\only<4,5>{\begin{minipage}{0.45\textwidth}
  			\begin{center}
+ 				$\Downarrow$
+
  				\textbf{Unbiased Markov chain Monte Carlo methods with couplings}
  			\end{center}
  		\end{minipage}}
  		\hfill
  		\only<5>{\begin{minipage}{0.45\textwidth}
  			\begin{center}
+ 				$\Downarrow$
+ 				
  				 \textbf{Approximate Bayesian Computation}
  			\end{center}
  		\end{minipage} }
@@ -124,7 +129,7 @@
 	\begin{frame}
 	 	\frametitle{The road to parallelization: coupling of Markov chains}
 	 	
-	 	$$ \text{Faster MCMC} \implies \text{Parallelization} \pause \iff \text{Unbiased estimator}
+	 	$$ \text{Faster MCMC} \implies \text{Parallelization} \pause \iff \text{\textbf{Unbiased estimator}}
 	 	$$
 
 		\pause
@@ -134,7 +139,7 @@
 		\end{minipage}
 		\hfill
 		\begin{minipage}{0.45\textwidth}
-			P. Glynn and C. Rhee proposed in 2018 the class of exact estimations algorithms using \textbf{coupling of Markov chain}.
+			Exact estimations algorithms using \textbf{coupling of Markov chain}.
 		\end{minipage}
 		\hfill
 		\begin{minipage}{0.40\textwidth}
@@ -156,7 +161,7 @@
 	 	The estimator we are going to construct is based on a coupled pair of Markov chains, $(X_t)_{t\geq 0}$ and $(Y_t)_{t\geq}$, which marginally start from $\pi_0$ and evolve accordingly to $P$.\\ 
 	\end{frame}
 	
-	\begin{frame}
+	\begin{frame}{Rhee--Glynn estimator II}
 	 	We consider some assumptions:
 	 	\begin{enumerate}
 	 		\item as $t \to \infty$, 
@@ -178,25 +183,25 @@
 	\end{frame}
 	
 	\begin{frame}
-	 	\frametitle{Rhee--Glynn estimator II}
+	 	\frametitle{Rhee--Glynn estimator III}
 	 	Thanks to the previous assumptions we can prove that:
 	 	\begin{align*}
 	 	\mathbb{E}_{\pi}[h(X)] = \mathbb{E}[
-	 		\textcolor{brown}{h(X_k) + \sum_{t = k+1}^{\tau -1}\{h(X_t) - h(Y_{t-1})\} } ]
+	 		\textcolor{orange}{h(X_k) + \sum_{t = k+1}^{\tau -1}\{h(X_t) - h(Y_{t-1})\} } ]
 	 	;
 	 	\end{align*}
 	 	\pause
 	 	and we define the Rhee--Glynn estimator as:
 	 	$$ 
 	 		H_k(X,Y)
-	 		=\textcolor{brown}{ h(X_k) + \sum_{t = k+1}^{\tau -1}\{h(X_t) - h(Y_{t-1})\} }
+	 		=\textcolor{orange}{ h(X_k) + \sum_{t = k+1}^{\tau -1}\{h(X_t) - h(Y_{t-1})\} }
 	 	$$
 	 	which is \textbf{unbiased} by construction.
 	\end{frame}
 
 	\begin{frame}
-	 	\frametitle{Time-averaged estimator}
-
+	 	\frametitle{Time-averaged estimator I}
+		\small {
 	 	\only<1>{
 		 	$$
 		 	H_{k:m}(X,Y)
@@ -222,8 +227,8 @@
  			\sum_{l=k+1}^{\tau -1}\min(1, \frac{l-k}{m-k+1})\{h(X_l)-h(Y_{l-1})\} }_{BC_{k:m}}
  		$$
  		}
+ 		}
 	 	
-	 	 %m-k deve essere comunque grande, m>> k
 	 	\pause
 	 	\begin{itemize}
 	 		\item $MCMC_{k:m}$  is the standard MCMC average;
@@ -237,9 +242,8 @@
 	\end{frame}
 
 	\begin{frame}
-	 	\frametitle{Application to Metropolis-Hasting algorithm I}
-		The MH \textbf{algorithm} adapted with couplings:
-	 	\vspace{0.3cm}
+	 	\frametitle{Time-averaged estimator II}
+
 	 	\begin{enumerate}
 	 		\item draw $X_0$ and $Y_0$ from an initial distribution $\pi_0$ and draw $X_1 \sim P(X_0, \cdot)$;
 	 		\item set $t=1$: while $t<\max\{m,\tau\}$ and:
@@ -254,8 +258,9 @@
 	\end{frame}
 
 	\begin{frame} 	
-		\frametitle{Application to Metropolis-Hasting algorithm II}
-	 	The following is the \textbf{algorithm} to calculate the coupled kernel $\bar P \{(X_t, Y_{t-1}), \cdot \}$ via MH:
+		\frametitle{Time-averaged estimator III}
+	 	Metropolis--Hasting algorithm allow us to calculate the coupled kernel $\bar P \{(X_t, Y_{t-1}), \cdot \}$:
+	 	\only<1>{
 	 	\begin{enumerate}
 	 		\item sample $(X^\star, Y^\star) | (X_t, Y_{t-1})$ from a maximal coupling of $q(X_t, \cdot)$ and $q(Y_{t-1}, \cdot)$;
 	 		\item sample $U \sim \mathcal{U}([0,1])$;
@@ -277,7 +282,34 @@
 	 		\bigg \}
 	 		$$
 	 		then $Y_{t+1} = Y^\star$; otherwise $Y_t = Y_{t-1}$.
+	 	
 	 	\end{enumerate}
+ 		}
+ 		\only<2>{
+ 			\begin{enumerate}
+ 				\item sample $(X^\star, Y^\star) | (X_t, Y_{t-1})$ from a maximal coupling of $q(X_t, \cdot)$ and $q(Y_{t-1}, \cdot)$;
+ 				\item sample $\textcolor{orange}{U} \sim \mathcal{U}([0,1])$;
+ 				\item if
+ 				$$ \textcolor{orange}{U}
+ 				\leq \min\bigg \{
+ 				1,
+ 				\frac{ \pi(X^\star)q(X^\star,X_t)}{
+ 					\pi(X_t)q(X_t, X^\star)}
+ 				\bigg \}
+ 				$$
+ 				then $X_{t+1} = X^\star$; otherwise $X_t = X_{t-1}$;
+ 				\item if
+ 				$$ \textcolor{orange}{U}
+ 				\leq \min\bigg \{ 
+ 				1,
+ 				\frac{ \pi(Y^\star)q(Y^\star,Y_t)}{
+ 					\pi(Y_t)q(Y_t, Y^\star)}
+ 				\bigg \}
+ 				$$
+ 				then $Y_{t+1} = Y^\star$; otherwise $Y_t = Y_{t-1}$.
+ 				
+ 			\end{enumerate}
+ 		}
 	\end{frame}
 
 \end{section}
@@ -325,9 +357,9 @@
 
 	\begin{frame}{Approximate Bayesian Computation}
 
-		\only<1>{$$\pi(\theta, y| y_{obs}) \propto \mathbb{I}(\parallel y-y_{obs} \parallel \leq h)p(y|\theta)\pi(\theta)$$
+		\only<1>{$$\pi(\theta, y| y_{obs}) \propto \textcolor{orange}{\mathbbm{1}(\parallel y-y_{obs} \parallel \leq h)}p(y|\theta)\pi(\theta)$$
 		\[ \Downarrow \]
-		\[		\pi_{ABC}(\theta, y | y_{obs}) \propto K_h(u)p(y|\theta)\pi(\theta)\]}
+		\[		\pi_{ABC}(\theta, y | y_{obs}) \propto \textcolor{orange}{K_h(u)}p(y|\theta)\pi(\theta)\]}
 	
 		\only<2>{$$\pi(\theta, y| y_{obs}) \propto \mathbb{I}(\parallel y-y_{obs} \parallel \leq h)p(y|\theta)\pi(\theta)$$
 		\[ \Downarrow \]
@@ -336,7 +368,7 @@
 		\pause
 		\vspace{0.7cm}
 		Where we used a \textbf{standard smoothing kernel function}:
-		\[ \textcolor{orange}{K_h(u)}  =  \frac{1}{h}  K  ( \frac{u}{h} ), \quad \text{ with } \  u=\parallel y-y_{obs} \parallel \]
+		\[ \textcolor{orange}{K_h(u)}  =  \frac{1}{h}  K \left( \frac{u}{h} \right), \quad \text{ with } \  u=\parallel y-y_{obs} \parallel \]
 		
 		
 	\end{frame}
@@ -346,9 +378,8 @@
 		
 		\pause
 		\vspace{0.3cm}
-		No
+		No, it's difficult to have $y\approx y_{obs}$: we should use a large $h$, obtaining a poor posterior approximation!
 		
-		\pause
 		\vspace{0.3cm}
 		$\Longrightarrow$ use summary statistics $s = S(y)$
 	\end{frame}
@@ -356,8 +387,14 @@
 	\begin{frame}{Summary statistics II}
 		
 		Critical decision: choice of summary statistics
-			
 		\pause
+		\vspace{0.3cm}
+		Dimension of summary statistics:
+		\begin{itemize}
+			\item large enough to contain as much as information about observed data as possible
+			\item low enough to avoid curse of dimensionality of matching $s$ and $s_{obs}$
+		\end{itemize}
+		
 		\vspace{0.3cm}
 		$\Longrightarrow$ choose sufficient statistics, such that:
 		\[   \pi(\theta|s_{obs}) \equiv \pi(\theta|y_{obs})   \]
