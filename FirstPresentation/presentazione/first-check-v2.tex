@@ -166,7 +166,7 @@
 	 	\begin{enumerate}
 	 		\item as $t \to \infty$, 
 	 		$$ \mathbb E [h(X_t)] \to \mathbb E_\pi [h(X)];$$
-	 		and there exists $\eta > 0$ and $D < \infty$ such that $\mathbb E [|h(X_t)|^{2 + \eta}] \leq D$ for all $t \geq 0$; %esistono i momenti fino a 2+nu
+	 		and there exists $\eta > 0$ and $D < \infty$ such that $\mathbb E [|h(X_t)|^{2 + \eta}] \leq D$ for all $t \geq 0$;
 	 		
 	 		\pause
 	 		\item the chains are such that the meeting time 
@@ -248,12 +248,17 @@
 	 		\item draw $X_0$ and $Y_0$ from an initial distribution $\pi_0$ and draw $X_1 \sim P(X_0, \cdot)$;
 	 		\item set $t=1$: while $t<\max\{m,\tau\}$ and:
 	 		\begin{itemize}
-	 			\item[a] draw $(X_{t+1}, Y_t)\sim \bar P \{(X_t, Y_{t-1}), \cdot \}$;
+	 			\item[a] draw $(X_{t+1}, Y_t)\sim \bar P \{(X_t, Y_{t-1}), \cdot \}$; \only<2>{\textcolor{orange}{$\qquad \bar P$ must be evaluated before!}}
 	 			\item[b] set $t \leftarrow t+1$;
 	 		\end{itemize}
-	 		\item compute 
-	 		$$ H_{k:m}(X,Y)$$
-	 		with the time-averaged estimator.
+	 		\item compute the time-averaged estimator:
+	 		\footnotesize{	 	$$
+	 		H_{k:m}(X,Y)
+	 		= \frac{1}{m-k+1}\sum_{l=k}^{m}h(X_l) 
+	 		+ \sum_{l=k+1}^{\tau -1}\min(1, \frac{l-k}{m-k+1})\{h(X_l)-h(Y_{l-1})\} .
+	 		$$
+	 		}
+
 	 	\end{enumerate}
 	\end{frame}
 
@@ -386,8 +391,9 @@
 		
 	\begin{frame}{Summary statistics II}
 		
-		Critical decision: choice of summary statistics
+		Critical decision: choice of summary statistics\\
 		\pause
+		
 		\vspace{0.3cm}
 		Dimension of summary statistics:
 		\begin{itemize}
