@@ -80,17 +80,13 @@
  		\hfill
  	 	\begin{minipage}{0.45\textwidth}
  	 		\begin{center}
- 	 		%	\only<2>{
- 	 				% \includegraphics{img/likelihood} %}
- 	 		%	\only<3,4,5>{
- 	 				\includegraphics{img/likelihood_na} %}
+ 	 				\includegraphics{img/likelihood_na}
  	 		\end{center}
  		\end{minipage}
  		
  		\vspace{0.5cm}
- 		
- 	%	\only<4,5>{
- 			\begin{minipage}{0.45\textwidth}
+
+ 		\begin{minipage}{0.45\textwidth}
  			\begin{center}
  				$\Downarrow$
 
@@ -98,8 +94,7 @@
  			\end{center}
  		\end{minipage} %}
  		\hfill
- 	%	\only<5>{
- 	\begin{minipage}{0.45\textwidth}
+	 	\begin{minipage}{0.45\textwidth}
  			\begin{center}
  				$\Downarrow$
  				
@@ -109,8 +104,7 @@
  	 	
  	 	\vspace{0.2cm}
  	 	
- 	 %	\only<4,5>{
- 	 		\begin{minipage}{0.45\textwidth}
+ 	 	\begin{minipage}{0.45\textwidth}
  	 		\begin{center}
  	 			\includegraphics{img/markov_coupled_parallel}
  	 		\end{center}
@@ -247,22 +241,55 @@
 	\begin{frame}
 		\frametitle{Results}
 		
-		$$\mathcal{N}(\mu_n, \sigma^2_n)$$
+		{\small
+			$$
+				\mathcal{N}(\mu_n, \sigma^2_n), 
+				\quad
+				\mu_n 
+					= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
+					\cdot \left(\frac{\mu_0}{\sigma_0^2} + \frac{\sum y_{obs}}{\sigma_{obs}^2}\right),
+				\quad
+				\sigma^2_n
+					= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
 		$$
-			\mu_n 
-			= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
-			\cdot \left(\frac{\mu_0}{\sigma_0^2} + \frac{\sum y_obs}{\sigma_{obs}^2}\right)
-			, \quad
-			= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
-		$$
-
-
-		\begin{itemize}
-			\item posterior
-			\item risultato del time averaged
-			\item grafico catene che si incontrano
-			\item istogramma dei samplings (sotto alla posterior)
-		\end{itemize}
+		}
+	
+		\begin{minipage}{0.48\textwidth}
+			\begin{center}
+				{\scriptsize \textbf{Coupled chains} }
+				\includegraphics[width=\textwidth]{img/mcmc_coupling_chain_meeting}
+			\end{center}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{0.48\textwidth}
+			\begin{center}
+				{\scriptsize \textbf{Complete sampling}}
+				\includegraphics[width=\textwidth]{img/mcmc_coupling_sampling}
+			\end{center}
+		\end{minipage}
+	
+		\vspace{0.2cm}
+	
+		\begin{minipage}{0.48\textwidth}
+			\begin{center}
+				{\scriptsize \textbf{Sampling histogram}}
+				\includegraphics[width=\textwidth]{img/mcmc_coupling_histogram}
+			\end{center}
+		\end{minipage}
+		\hfill
+		\begin{minipage}{0.48\textwidth}
+			\begin{center}
+				{\small\textbf{Time Averaged Estimators mean:}}
+				$ \mathbb{E}[H_{k:m}(X,Y)] = 42.9498$
+			\end{center}
+		\end{minipage}
+		
+		%\begin{itemize}
+		%	\item posterior
+		%	\item risultato del time averaged
+		%	\item grafico catene che si incontrano
+		%	\item istogramma dei samplings (sotto alla posterior)
+		%\end{itemize}
 	\end{frame}
 	
 \end{section}
@@ -309,56 +336,58 @@
 		\end{itemize}
 	}
 	\end{frame}
-	
-	\begin{frame}{}
-		summary statistics: media
-		distanza: norma (modulo della differenza)   (mahalanobis nel caso multivariato)
-		kernel: 1/(np.sqrt(2*math.pi))np.exp(-1/2*u*2)
-		% parlare di abc in caso univariato -> le nostre scelte come summary statistics, distanza, kernel
-	\end{frame}
 
 	\begin{frame}
 		\frametitle{Study case}
-		
-		\begin{block}{Model}
+		\only<1>{
+			\textbf{Summary statistic}: \\
 			\begin{center}
-				$ Y_i | \mu \overset{iid}{\sim} \mathcal{N}(\mu, \sigma_{obs} ^2) $\\
-				
-				\vspace{0.3cm}
-				
-				$ \mu  \sim \mathcal{N}(\mu_0, \sigma_0^2)$
-				
-				$\mu_0 = 38, \quad \sigma^2_0 = 4$
+				Mean
 			\end{center}
-		\end{block}
-		
-		\begin{block}{Dataset}
-			1000 samples generated from a Gaussian distribution:
+			
+			\textbf{Distance}: 
 			\begin{center}
-				$
-				Y_{obs} \sim \mathcal{N}(\mu_{obs}, \sigma_{obs} ^2)
-				$
-				
-				$
-				\mu_{obs} = 43, \quad
-				\sigma_{obs} ^2 = 5
-				$
-			\end{center}
-		\end{block}
+				Norm (absolute value) of the difference.
+			\end{center}   %malanobis nel multivariato
+			
+			\textbf{Kernel}: 
+			$$\frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2}.$$
+			%1/(np.sqrt(2*math.pi))np.exp(-1/2*u*2)
+		}
+		\only<2>{
+			Same as previous:
+			\begin{block}{Model}
+				\begin{center}
+					$ Y_i | \mu \overset{iid}{\sim} \mathcal{N}(\mu, \sigma_{obs} ^2) $\\
+					
+					\vspace{0.3cm}
+					
+					$ \mu  \sim \mathcal{N}(\mu_0, \sigma_0^2)$
+					
+					$\mu_0 = 38, \quad \sigma^2_0 = 4$
+				\end{center}
+			\end{block}
+			
+			\begin{block}{Dataset}
+				1000 samples generated from a Gaussian distribution:
+				\begin{center}
+					$
+					Y_{obs} \sim \mathcal{N}(\mu_{obs}, \sigma_{obs} ^2)
+					$
+					
+					$
+					\mu_{obs} = 43, \quad
+					\sigma_{obs} ^2 = 5
+					$
+				\end{center}
+			\end{block}
+		}
 	\end{frame}
 
-
-	
 	
 	\begin{frame}{}
 		% grafici per un esempio univariato con summary mean -> e uno con quantili? (funzionava?)
 	\end{frame}
-	
-	\begin{frame}{}
-		%
-	\end{frame}
-
-
 \end{section}
 
 \begin{section}{The complete method: Monte Carlo Markov chain method with couplings and approximate bayesian computation}
@@ -378,8 +407,11 @@
 \end{section}
 
 
-
-
+\begin{section}{Multivariate study case}
+	\begin{frame}[plain]{}
+		\sectionpage
+	\end{frame}
+\end{section}
 
 
 \begin{section}{Conclusions}
