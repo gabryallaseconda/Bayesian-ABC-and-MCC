@@ -230,19 +230,32 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Implementation and parallelization}
+		\frametitle{Implementation}
+		\begin{center}
+			\includegraphics[width=0.9\textwidth]{img/Bayes1}
+		\end{center}
 	\end{frame}
+
+	\begin{frame}
+		\frametitle{Parallelization}
+		\begin{center}
+			\includegraphics[width=0.9\textwidth]{img/Bayes2}
+		\end{center}
+	\end{frame}
+
 
 	\begin{frame}
 		\frametitle{Results}
 		
-		$\mathcal{N}(\mu_n, \sigma^2_n)$
-		$\mu_n = 
-		y= tfd.Normal(
-		1/(1/sigma0*2 + n/sigma_obs2)(mu0/sigma0*2 + (np.sum(y)/sigma_obs2)),
-		1/(1/sigma02 + n/sigma_obs*2)
-		)   
-		$
+		$$\mathcal{N}(\mu_n, \sigma^2_n)$$
+		$$
+			\mu_n 
+			= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
+			\cdot \left(\frac{\mu_0}{\sigma_0^2} + \frac{\sum y_obs}{\sigma_{obs}^2}\right)
+			, \quad
+			= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
+		$$
+
 
 		\begin{itemize}
 			\item posterior
@@ -262,30 +275,37 @@
 	\end{frame}
 	
 	%%%% (dire quale summary statistica usata, quale distanza usata, quale kernel)
-\begin{frame}{ABC rejection sampling algorithm}
-	NO, UTILIZZARE ALGORITMO DI PAGINA 103
+\begin{frame}{ABC Metropolis Hastings}
 	\only<1> {
 		\emph{Inputs:}
 		\begin{itemize}
 			\item a target posterior density $\pi(\theta | y_{obs}) \propto p(y_{obs}|\theta) \pi(\theta)$, consisting of a prior distribution $\pi(\theta)$ and a procedure of generating data under the model $p(y_{obs}|\theta)$;
-			\item a proposal density $g(\theta)$, with $g(\theta)\textgreater 0 $ if $\pi(\theta | y_{obs}) \textgreater 0$;
+			\item a Markov proposal density $g(\theta,\theta')$=$g(\theta' | \theta)$;
 			\item an integer $N \textgreater0$;
 			\item a kernel function $K_h(u)$ and a scale parameter $h > 0$;
 			\item a low dimensional vector of summary statistics $s=S(y)$.
 		\end{itemize}
+		
+		\emph{Initialise:} \\
+		repeat:
+		\begin{enumerate}
+			\item choose an initial parameter vector $\theta^{(0)}$ from the support of $\pi(\theta)$;
+			\item generate $ y^{0} \sim p(y|\theta ^ {(0)})$ from the model and compute summary statistics $s^{0}=S(y^{(0)})$, until ${K_h(\parallel s^{(0)}-s_{obs}\parallel)} >0$.
+		\end{enumerate}
 	}
 	\only<2> {
-		\emph{Sampling} for $i= 1,..., N$:
+		\emph{Sampling} for $i=1,...,N$:
 		\begin{enumerate}
-			\item generate $\theta ^ {(i)} \sim g(\theta)$ from sampling density $g$;
-			\item generate $ y \sim p(y|\theta ^ {(i)})$ from the likelihood;
-			\item compute summary statistic $s = S(y)$;
-			\item accept $\theta ^ {(i)}$ with probability $\frac{K_h(\parallel s-s_{obs}\parallel)   \pi(\theta ^ {(i)})}{K g(\theta ^ {(i)})}$, where $K \geq K_h(0)\max_{\theta}{\frac{\pi(\theta)}{g(\theta)}}$; else go to 1.
+			\item generate candidate vector $\theta' \sim g(\theta^{(i-1)},\theta)$ from the proposal density $g$;
+			\item generate $ y\,' \sim p(y|\theta')$ from the model and compute summary statistics  $s' = S(y\,')$;
+			\item with probability $$\min \{ 1, \frac{K_h(\parallel s'-s_{obs}\parallel)   \pi(\theta')g(\theta',\theta^{(i-1)})}{K_h(\parallel s^{(i-1)}-s_{obs}\parallel)   \pi(\theta^{(i-1)})g(\theta^{(i-1)},\theta') } \}$$ 
+			set $(\theta^{(i)},s^{(i)})=(	\theta',s')$. 
+			Otherwise set  $(\theta^{(i)},s^{(i)})=(\theta^{(i-1)},s^{(i-1)})$.
 		\end{enumerate}
 		
 		\emph{Output:}
 		\begin{itemize}
-			\item a set of parameter vectors $\theta ^ {(1)},..., \theta ^ {(N)} \sim \pi_{ABC}(\theta |S_{obs})$.
+			\item a set of correlated parameter vectors $\theta ^ {(1)},..., \theta ^ {(N)}$ from a Markov chain with stationary distribution $\pi_{ABC}(\theta |S_{obs})$.
 		\end{itemize}
 	}
 	\end{frame}
@@ -326,6 +346,9 @@
 			\end{center}
 		\end{block}
 	\end{frame}
+
+
+	
 	
 	\begin{frame}{}
 		% grafici per un esempio univariato con summary mean -> e uno con quantili? (funzionava?)
@@ -333,6 +356,22 @@
 	
 	\begin{frame}{}
 		%
+	\end{frame}
+
+
+\end{section}
+
+\begin{section}{The complete method: Monte Carlo Markov chain method with couplings and approximate bayesian computation}
+	
+	\begin{frame}[plain]{}
+		\sectionpage
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Implementation}
+		\begin{center}
+			\includegraphics[width=\textwidth]{img/Bayes3}
+		\end{center}
 	\end{frame}
 
 
