@@ -189,7 +189,7 @@ $$
 %1/(np.sqrt(2*math.pi))np.exp(-1/2*u*2)
 }
 \only<2>{
-Same as previous: - DA RIVEDERE
+
 \begin{block}{Model}
 	\begin{center}
 		$ Y_i | \mu \overset{iid}{\sim} \mathcal{N}(\mu, \sigma_{obs} ^2) $\\
@@ -198,20 +198,20 @@ Same as previous: - DA RIVEDERE
 		
 		$ \mu  \sim \mathcal{N}(\mu_0, \sigma_0^2)$
 		
-		$\mu_0 = 38, \quad \sigma^2_0 = 4$
+		$\mu_0 = 8, \quad \sigma^2_0 = 4$
 	\end{center}
 \end{block}
 
 \begin{block}{Dataset}
-	1000 samples generated from a Gaussian distribution:
+	100 samples generated from a Gaussian distribution:
 	\begin{center}
 		$
 		Y_{obs} \sim \mathcal{N}(\mu_{obs}, \sigma_{obs} ^2)
 		$
 		
 		$
-		\mu_{obs} = 43, \quad
-		\sigma_{obs} ^2 = 5
+		\mu_{obs} = 10, \quad
+		\sigma_{obs} ^2 = 3
 		$
 	\end{center}
 \end{block}
@@ -239,6 +239,31 @@ Same as previous: - DA RIVEDERE
 \end{center}
 % grafici per un esempio univariato con summary mean -> e uno con quantili? (funzionava?)
 \end{frame}
+
+
+\begin{frame}{Results}
+The same model using as summary statistic a vector of 10 quantiles:
+\begin{center}
+	\begin{minipage}{0.63\textwidth}
+		\begin{center}
+			{\scriptsize \textbf{Sampling}}
+			\includegraphics[width=\textwidth]{img/mcmc_abc_sampling}
+		\end{center}
+	\end{minipage}
+	
+	\vspace{0.2cm}
+	
+	\begin{minipage}{0.63\textwidth}
+		\begin{center}
+			{\scriptsize \textbf{Sampling histogram with real distribution}}
+			\includegraphics[width=\textwidth]{img/mcmc_abc_histogram}
+		\end{center}
+	\end{minipage}
+\end{center}
+% grafici per un esempio univariato con summary mean -> e uno con quantili? (funzionava?)
+\end{frame}
+
+
 \end{section}
 
 
@@ -336,20 +361,20 @@ Same as previous: - DA RIVEDERE
 				
 				$ \mu  \sim \mathcal{N}(\mu_0, \sigma_0^2)$
 				
-				$\mu_0 = 38, \quad \sigma^2_0 = 4$
+				$\mu_0 = 8, \quad \sigma^2_0 = 4$
 			\end{center}
 		\end{block}
 		
 		\begin{block}{Dataset}
-			1000 samples generated from a Gaussian distribution:
+			100 samples generated from a Gaussian distribution:
 			\begin{center}
 				$
 				Y_{obs} \sim \mathcal{N}(\mu_{obs}, \sigma_{obs} ^2)
 				$
 				
 				$
-				\mu_{obs} = 43, \quad
-				\sigma_{obs} ^2 = 5
+				\mu_{obs} = 10, \quad
+				\sigma_{obs} ^2 = 3
 				$
 			\end{center}
 		\end{block}
@@ -514,7 +539,6 @@ Same as previous: - DA RIVEDERE
 			%1/(np.sqrt(2*math.pi))np.exp(-1/2*u*2)
 		}
 		\only<2>{
-			DA SISTEMARE
 			\begin{block}{Model}
 				\begin{center}
 					$ Y_i | \mu \overset{iid}{\sim} \mathcal{N}(\mu, \sigma_{obs} ^2) $\\
@@ -523,20 +547,20 @@ Same as previous: - DA RIVEDERE
 					
 					$ \mu  \sim \mathcal{N}(\mu_0, \sigma_0^2)$
 					
-					$\mu_0 = 38, \quad \sigma^2_0 = 4$
+					$\mu_0 = 8, \quad \sigma^2_0 = 4$
 				\end{center}
 			\end{block}
 			
 			\begin{block}{Dataset}
-				1000 samples generated from a Gaussian distribution:
+				100 samples generated from a Gaussian distribution:
 				\begin{center}
 					$
 					Y_{obs} \sim \mathcal{N}(\mu_{obs}, \sigma_{obs} ^2)
 					$
 					
 					$
-					\mu_{obs} = 43, \quad
-					\sigma_{obs} ^2 = 5
+					\mu_{obs} = 10, \quad
+					\sigma_{obs} ^2 = 3
 					$
 				\end{center}
 			\end{block}
