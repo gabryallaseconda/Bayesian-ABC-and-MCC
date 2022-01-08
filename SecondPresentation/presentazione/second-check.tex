@@ -126,6 +126,13 @@
 	\begin{frame}[plain]{}
 		\sectionpage
 	\end{frame}
+
+	\begin{frame}
+		\frametitle{Structure of the method}
+		\begin{center}
+			\includegraphics[width=0.95\textwidth]{img/Bayes1}
+		\end{center}
+	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Time-averaged estimator}
@@ -148,8 +155,6 @@
 	
 	\begin{frame} 	
 		\frametitle{Metropolis--Hasting algorithm for a coupled kernel}
-		Metropolis--Hasting algorithm allow us to calculate the coupled kernel $\bar P \{(X_t, Y_{t-1}), \cdot \}$:
-
 			\begin{enumerate}
 				\item sample $(X^\star, Y^\star) | (X_t, Y_{t-1})$ from a maximal coupling of $q(X_t, \cdot)$ and $q(Y_{t-1}, \cdot)$;
 				\item sample $U \sim \mathcal{U}([0,1])$;
@@ -178,9 +183,7 @@
 
 	\begin{frame}
 		\frametitle{Maximal coupling}
-		The algorithm:\\
-		
-		Set $p = \mathcal{N}(X_{t-1},1)$ and $q = \mathcal{N}(Y_{t-1},1)$,
+		Set $p = \mathcal{N}(X_{t-1},1)$ and $q = \mathcal{N}(Y_{t-1},1)$, then:
 		\begin{enumerate}
 			\item sample $X_t \sim p$;
 			\item sample $W|X_t \sim \mathcal{U}\{[0,p(X_t)]\}$;
@@ -192,6 +195,14 @@
 			\end{enumerate}
 		\end{enumerate}
 	\end{frame}
+
+	\begin{frame}
+		\frametitle{Parallelization}
+		\begin{center}
+			\includegraphics[width=0.95\textwidth]{img/Bayes2}
+		\end{center}
+	\end{frame}
+
 
 	\begin{frame}
 		\frametitle{Study case}
@@ -224,21 +235,6 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Implementation}
-		\begin{center}
-			\includegraphics[width=0.9\textwidth]{img/Bayes1}
-		\end{center}
-	\end{frame}
-
-	\begin{frame}
-		\frametitle{Parallelization}
-		\begin{center}
-			\includegraphics[width=0.9\textwidth]{img/Bayes2}
-		\end{center}
-	\end{frame}
-
-
-	\begin{frame}
 		\frametitle{Results}
 		
 		{\small
@@ -247,10 +243,12 @@
 				\quad
 				\mu_n 
 					= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
-					\cdot \left(\frac{\mu_0}{\sigma_0^2} + \frac{\sum y_{obs}}{\sigma_{obs}^2}\right),
+					\cdot \left(\frac{\mu_0}{\sigma_0^2} + \frac{\sum y_{obs}}{\sigma_{obs}^2}\right)
+					\simeq 42.99,
 				\quad
 				\sigma^2_n
 					= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
+					\simeq 0.025
 		$$
 		}
 	
@@ -317,7 +315,7 @@
 		repeat:
 		\begin{enumerate}
 			\item choose an initial parameter vector $\theta^{(0)}$ from the support of $\pi(\theta)$;
-			\item generate $ y^{0} \sim p(y|\theta ^ {(0)})$ from the model and compute summary statistics $s^{0}=S(y^{(0)})$, until ${K_h(\parallel s^{(0)}-s_{obs}\parallel)} >0$.
+			\item generate $ y^{(0)} \sim p(y|\theta ^ {(0)})$ from the model and compute summary statistics $s^{(0)}=S(y^{(0)})$, until ${K_h(\parallel s^{(0)}-s_{obs}\parallel)} >0$.
 		\end{enumerate}
 	}
 	\only<2> {
@@ -342,20 +340,26 @@
 		\only<1>{
 			\textbf{Summary statistic}: \\
 			\begin{center}
-				Mean
+				Sample mean
 			\end{center}
 			
 			\textbf{Distance}: 
 			\begin{center}
-				Norm (absolute value) of the difference.
+				2-norm of the difference.
 			\end{center}   %malanobis nel multivariato
 			
 			\textbf{Kernel}: 
-			$$\frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2}.$$
+			$$
+			K(u) = 
+			\frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2}, 
+			\quad K_h(u) 
+			= \frac{K(\frac u h)}{h}
+			.
+			$$
 			%1/(np.sqrt(2*math.pi))np.exp(-1/2*u*2)
 		}
 		\only<2>{
-			Same as previous:
+			Same as previous: - DA RIVEDERE
 			\begin{block}{Model}
 				\begin{center}
 					$ Y_i | \mu \overset{iid}{\sim} \mathcal{N}(\mu, \sigma_{obs} ^2) $\\
@@ -385,12 +389,29 @@
 	\end{frame}
 
 	
-	\begin{frame}{}
+	\begin{frame}{Results}
+		\begin{center}
+			\begin{minipage}{0.63\textwidth}
+				\begin{center}
+					{\scriptsize \textbf{Sampling}}
+					\includegraphics[width=\textwidth]{img/mcmc_abc_sampling}
+				\end{center}
+			\end{minipage}
+		
+			\vspace{0.2cm}
+		
+			\begin{minipage}{0.63\textwidth}
+				\begin{center}
+					{\scriptsize \textbf{Sampling histogram with real distribution}}
+					\includegraphics[width=\textwidth]{img/mcmc_abc_histogram}
+				\end{center}
+			\end{minipage}
+		\end{center}
 		% grafici per un esempio univariato con summary mean -> e uno con quantili? (funzionava?)
 	\end{frame}
 \end{section}
 
-\begin{section}{The complete method: Monte Carlo Markov chain method with couplings and approximate bayesian computation}
+\begin{section}{The complete method: MCMC + Couplings + ABC}
 	
 	\begin{frame}[plain]{}
 		\sectionpage
@@ -403,14 +424,145 @@
 		\end{center}
 	\end{frame}
 
+	\begin{frame}
+		\frametitle{Metropolis Hastings with couplings and ABC}
+		\only<1>{
+			\begin{enumerate}
+				\item Compute $s_{obs} = S(y_{obs})$;
+				\item generate $\theta_{x}^{(0)} \sim  \pi(\mu)$ and $\theta_{y}^{(0)} \sim  \pi(\mu)$ from prior density;
+				\item generate with a maximal coupling two samples of N observations such that $y_{1i} \sim \mathcal{N}(\theta_{x}^{(0)}, \sigma_{obs} ^2)$ and  $y_{2j} \sim \mathcal{N}(\theta_{y}^{(0)}, \sigma_{obs} ^2)$;
+				\item compute $s_{x}^{(0)}=S(y_{1})$ and $s_{y}^{(0)}=S(y_{2})$;
+				\item untill $Kh(||s_{x}^{(0)}−s_{obs}||)>0$:
+				\begin{itemize}
+					\item generate $\theta_{x}^{(0)} \sim  \pi(\mu)$ from prior density;
+					\item generate a sample of N observations such that $y_{1i} \sim \mathcal{N}(\theta_{x}^{(0)}, \sigma_{obs} ^2)$;
+					\item compute $s_{x}^{(0)}=S(y_{1})$;
+				\end{itemize}
+				\item untill $Kh(||s_{y}^{(0)}−s_{obs}||)>0$:
+				\begin{itemize}
+					\item generate $\theta_{y}^{(0)} \sim  \pi(\mu)$ from prior density;
+					\item generate a sample of N observations such that $y_{2j} \sim \mathcal{N}(\theta_{y}^{(0)}, \sigma_{obs} ^2)$;
+					\item compute $s_{y}^{(0)}=S(y_{2})$;
+				\end{itemize}
+				
+			\end{enumerate}
+		}
+		\only<2>{
+			\begin{enumerate}
+				\setcounter{enumi}{7}	
 
-\end{section}
-
-
-\begin{section}{Multivariate study case}
-	\begin{frame}[plain]{}
-		\sectionpage
+				\item for i = 1,...,N:
+				\begin{itemize}
+					\item generate [$\theta_{x}^{(i)},\theta_{y}^{(i)}$] from a maximal coupling given [$\theta_{x}^{(i-1)},\theta_{y}^{(i-1)}$];
+					\item generate from a maximal coupling two samples of N observations $y_{1} \sim p(y|\theta_{x}^{(i)})$ and $y_{2} \sim p(y|\theta_{y}^{(i)})$;
+					\item compute $s_{x}^{(i)}=S(y_{1})$ and $s_{y}^{(i)}=S(y_{2})$;
+					\item accept $\theta_{x}^{(i)}$ with probability 
+					$$
+						\frac{
+							Kh(||s_{x}^{(i)}−s_{obs}||)\pi(\theta_{x}^{(i)})
+						}{
+							Kh(||s_{x}^{(i-1)}−s_{obs}||)\pi(\theta_{x}^{(i-1)})
+						}
+					$$
+					and accept $\theta_{y}^{(i)}$ with probability
+					$$
+						\frac{
+							Kh(||s_{y}^{(i)}−s_{obs}||)\pi(\theta_{y}^{(i)})
+						}{
+							Kh(||s_{y}^{(i-1)}−s_{obs}||)\pi(\theta_{y}^{(i-1)})
+						}.
+					$$ 
+				\end{itemize}
+			
+			
+			\end{enumerate}
+		}
+		\only<3>{
+			As output we get two sets of parameter vectors: 
+			$$\theta_{x}^{(1)},...,\theta_{x}^{(N)}\sim \pi_{ABC} (\theta|y_{obs});$$
+			$$\theta_{y}^{(1)},...,\theta_{y}^{(N)} \sim \pi_{ABC} (\theta|y_{obs}).$$
+		}
+		
+	
 	\end{frame}
+
+	\begin{frame}
+		\frametitle{Study case}
+		\only<1>{
+			\textbf{Summary statistic}: \\
+			\begin{center}
+				Sample mean
+			\end{center}
+			
+			\textbf{Distance}: 
+			\begin{center}
+				2-norm of the difference.
+			\end{center}   %malanobis nel multivariato
+			
+			\textbf{Kernel}: 
+			$$
+				K(u) = 
+				\frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2}, 
+				\quad K_h(u) 
+				= \frac{K(\frac u h)}{h}
+			.
+			$$
+			%1/(np.sqrt(2*math.pi))np.exp(-1/2*u*2)
+		}
+		\only<2>{
+			DA SISTEMARE
+			\begin{block}{Model}
+				\begin{center}
+					$ Y_i | \mu \overset{iid}{\sim} \mathcal{N}(\mu, \sigma_{obs} ^2) $\\
+					
+					\vspace{0.3cm}
+					
+					$ \mu  \sim \mathcal{N}(\mu_0, \sigma_0^2)$
+					
+					$\mu_0 = 38, \quad \sigma^2_0 = 4$
+				\end{center}
+			\end{block}
+			
+			\begin{block}{Dataset}
+				1000 samples generated from a Gaussian distribution:
+				\begin{center}
+					$
+					Y_{obs} \sim \mathcal{N}(\mu_{obs}, \sigma_{obs} ^2)
+					$
+					
+					$
+					\mu_{obs} = 43, \quad
+					\sigma_{obs} ^2 = 5
+					$
+				\end{center}
+			\end{block}
+		}
+	\end{frame}
+
+
+
+	\begin{frame}
+		\frametitle{Results}
+		\begin{center}
+			\begin{minipage}{0.63\textwidth}
+				\begin{center}
+					{\scriptsize \textbf{Sampling}}
+					\includegraphics[width=\textwidth]{img/mcmc_couplings_abc_sampling}
+				\end{center}
+			\end{minipage}
+			
+			\vspace{0.2cm}
+			
+			\begin{minipage}{0.63\textwidth}
+				\begin{center}
+					{\scriptsize \textbf{Sampling histogram with real distribution}}
+					\includegraphics[width=\textwidth]{img/mcmc_couplings_abc_histogram}
+				\end{center}
+			\end{minipage}
+		\end{center}
+	\end{frame}
+
+
 \end{section}
 
 
@@ -422,7 +574,7 @@
 
 	\begin{frame}{Next steps}
 	
-		The next step will be the conclusion of the \textbf{separate multivariate implementation} of both solution to be tested on simulated data and the \textbf{parallelized multivariate implementation}.
+		The next step will be the conclusion of the \textbf{multivariate implementation} the MCMC with couplings and approximate bayesian computation.
 		
 		\vspace{0.5 cm}
 		Further steps will be testing on more complex data.
