@@ -223,7 +223,6 @@ K(u) =
 \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2}, 
 \quad K_h(u) 
 = \frac{K(\frac u h)}{h}
-
 $$
 %1/(np.sqrt(2*math.pi))np.exp(-1/2*u*2)
 }
@@ -260,28 +259,17 @@ $$
 
 \begin{frame}{Results}
 
-%\begin{center}
-
-\begin{columns}
-	
-
-
-\begin{column}{0.5\textwidth}
-
-
 	{\small
-		Posterior distribution:
+		\textbf{Posterior distribution:}
 		
 		$$
 		\mathcal{N}(\mu_n, \sigma^2_n), 
-		
 		\vspace{0.3cm}
 		%\quad
 		\mu_n 
 		= \frac{1}{ \frac{1}{\sigma_0^2} + \frac{n}{\sigma_{obs}^2} } 
 		\cdot \left(\frac{\mu_0}{\sigma_0^2} + \frac{\sum y_{obs}}{\sigma_{obs}^2}\right)
 		\simeq 10.151,
-		
 		\vspace{0.3cm}
 		%\quad
 		\sigma^2_n
@@ -289,31 +277,23 @@ $$
 		\simeq 0.0298
 		$$
 	}
-\end{column}
-
-\begin{column}{0.5\textwidth}
 
 
-\begin{minipage}{0.99\textwidth}
+
+\begin{minipage}{0.45\textwidth}
 \begin{center}
 	{\scriptsize \textbf{Sampling}}
 	\includegraphics[width=\textwidth]{ABC_graphs/ABCiter1000}
 \end{center}
 \end{minipage}
-
-\vspace{0.2cm}
-
-\begin{minipage}{0.99\textwidth}
+\hfill
+\begin{minipage}{0.45\textwidth}
 \begin{center}
 	{\scriptsize \textbf{Sampling histogram with real distribution}}
 	\includegraphics[width=\textwidth]{ABC_graphs/ABCunivgraphic}
 \end{center}
 \end{minipage}
-%\end{center}
 
-
-\end{column}
-\end{columns}
 
 \end{frame}
 
@@ -498,7 +478,7 @@ The same model using as summary statistic a vector of 9 quantiles:
 		\begin{minipage}{0.48\textwidth}
 			\begin{center}
 				{\small\textbf{Time Averaged Estimators mean:}}
-				$ \mathbb{E}[H_{k:m}(X,Y)] = 10.06$
+				$ \mathbb{E}[H_{k:m}(X,Y)] = 10.042$
 			\end{center}
 		\end{minipage}
 		
@@ -608,7 +588,6 @@ The same model using as summary statistic a vector of 9 quantiles:
 				\frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}u^2}, 
 				\quad K_h(u) 
 				= \frac{K(\frac u h)}{h}
-			
 			$$
 			%1/(np.sqrt(2*math.pi))np.exp(-1/2*u*2)
 		}
