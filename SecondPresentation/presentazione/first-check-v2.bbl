@@ -1,0 +1,41 @@
+\begin{thebibliography}{1}
+
+\bibitem{jacob2017couplings}
+Pierre Jacob, John O'Leary, and Yves Atchadé.
+\newblock Unbiased markov chain monte carlo with couplings.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)}, 82, 08 2017.
+
+\bibitem{glynn2014exact}
+Peter~W. Glynn and Chang han Rhee.
+\newblock Exact estimation for markov chain equilibrium expectations, 2014.
+
+\bibitem{rosenthal1997faithful}
+Jeffrey~S. Rosenthal.
+\newblock Faithful couplings of markov chains: Now equals forever.
+\newblock {\em Advances in Applied Mathematics}, 18(3):372--381, 1997.
+
+\bibitem{Cordaro2017past}
+Dylan Cordaro.
+\newblock Markov chain and coupling from the past.
+\newblock 2017.
+
+\bibitem{zhang2020markov}
+Jinming Zhang.
+\newblock Markov chains, mixing times and coupling methods with an application
+  in social learning.
+\newblock 2020.
+
+\bibitem{sisson2018overview}
+S.~A. Sisson, Y.~Fan, and M.~A. Beaumont.
+\newblock Overview of approximate bayesian computation, 2018.
+
+\bibitem{fan2018abc}
+Y.~Fan and S.~A. Sisson.
+\newblock Abc samplers, 2018.
+
+\bibitem{prangle2015summary}
+Dennis Prangle.
+\newblock Summary statistics in approximate bayesian computation, 2015.
+
+\end{thebibliography}

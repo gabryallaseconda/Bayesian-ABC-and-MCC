@@ -1,0 +1,6 @@
+\babel@toc {italian}{}
+\babel@toc {italian}{}
+\beamer@sectionintoc {1}{Introduction}{2}{0}{1}
+\beamer@sectionintoc {2}{Unbiased Markov chain Monte Carlo methods with couplings}{3}{0}{2}
+\beamer@sectionintoc {3}{Approximate Bayesian Computation}{20}{0}{3}
+\beamer@sectionintoc {4}{Conclusions}{26}{0}{4}
