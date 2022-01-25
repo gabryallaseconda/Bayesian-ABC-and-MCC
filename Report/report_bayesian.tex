@@ -108,21 +108,135 @@ Parlare dei metodi di ABC e di Maximal coupling (con time average) in modo separ
 
 poi parlare qua di come siano stati messi insieme o nella sezione dopo?
 
-Maecenas sed ultricies felis. Sed imperdiet dictum arcu a egestas. 
-\begin{itemize}
-\item Donec dolor arcu, rutrum id molestie in, viverra sed diam
-\item Curabitur feugiat
-\item turpis sed auctor facilisis
-\item arcu eros accumsan lorem, at posuere mi diam sit amet tortor
-\item Fusce fermentum, mi sit amet euismod rutrum
-\item sem lorem molestie diam, iaculis aliquet sapien tortor non nisi
-\item Pellentesque bibendum pretium aliquet
-\end{itemize}
+\subsection{Unbiased Markov chain Monte Carlo methods with couplings}
+
+
+Markov chain Monte Carlo (MCMC) methods provide consistent approximations of high dimensional integrals, namely as the number of iterations goes to infinity. However, these estimators can be potentially biased for any fixed number of iterations, hence the aim is to propose a general construction to produce unbiased estimators of integrals with respect to a target probability distribution. 
+
+Glynn and Rhee \cite{glynnrhee} illustrated a construction on Markov chains represented by iterated random functions; in their approach only two chains must be coupled for the proposed estimator to be unbiased, without further assumptions on the state space or target distribution.
+
+The goal is to estimate
+$$
+\mathbb{E}_{\pi}[h(X)] 
+= \int h(x) \pi (d x)
+.
+$$
+The estimator is based on a coupled pair of Markov chains, $(X_t)_{t\geq 0}$ and $(Y_t)_{t\geq}$, which marginally start from $\pi_0$ and evolve accordingly to $P$.\\ 
+
+It must be considered some assumptions:
+\begin{enumerate}
+	\item as $t \to \infty$, 
+	$$ \mathbb E [h(X_t)] \to \mathbb E_\pi [h(X)];$$
+	and there exists $\eta > 0$ and $D < \infty$ such that $\mathbb E [|h(X_t)|^{2 + \eta}] \leq D$ for all $t \geq 0$;
+	
+	
+	\item the chains are such that the meeting time 
+	$$
+	\tau 
+	= \inf\{t \geq 1 : X_t = Y_{t-1}\}
+	$$ 
+	satisfies $\mathbb{P}(\tau > t) \leq C \delta^t$ for all $t \geq 0$, for some constants $C < \infty$ and $\delta \in (0,1)$;
+	
+	
+	\item the chains stay together after meeting:
+	$$X_t = Y_{t-1}  \forall t \geq \tau.$$
+\end{enumerate}
+
+Thanks to the previous assumptions it can be proved that:
+%\begin{align*}
+$$\mathbb{E}_{\pi}[h(X)] = \mathbb{E}[
+h(X_k) + \sum_{t = k+1}^{\tau -1}\{h(X_t) - h(Y_{t-1})\} ]
+;$$
+%\end{align*}
+and  the Rhee--Glynn estimator can be defined as:
+$$ 
+H_k(X,Y)
+= h(X_k) + \sum_{t = k+1}^{\tau -1}\{h(X_t) - h(Y_{t-1})\} 
+$$
+which is unbiased by construction.
+
+
+
+time-averaged estimator:
+
+$$
+H_{k:m}(X,Y) = MCMC_{k:m} + BC_{k:m} $$
+
+
+
+
+
+%= \underbrace{
+%	\frac{1}{m-k+1}\sum_{l=k}^{m}h(X_l) }_{MCMC_{k:m}}$$ 
+%$$+ \underbrace{ 
+%	\sum_{l=k+1}^{\tau -1}\min(1, \frac{l-k}{m-k+1})\{h(X_l)-h(Y_{l-1})\} }_{BC_{k:m}}
+%$$
+where:
+$$MCMC_{k:m}=\frac{1}{m-k+1}\sum_{l=k}^{m}h(X_l)$$  is the standard MCMC average;
+ \small{$$BC_{k:m}=\sum_{l=k+1}^{\tau -1}\min(1, \frac{l-k}{m-k+1})\{h(X_l)-h(Y_{l-1})\} $$} is the bias correction.
+
+The algorithm of the time-average estimator:
+\begin{enumerate}
+	\item draw $X_0$ and $Y_0$ from an initial distribution $\pi_0$ and draw $X_1 \sim P(X_0, \cdot)$;
+	\item set $t=1$: while $t<\max\{m,\tau\}$ and:
+	\begin{itemize}
+		\item[a] draw $(X_{t+1}, Y_t)\sim \bar P \{(X_t, Y_{t-1}), \cdot \}$; %\textcolor{orange}{$\qquad \bar P$ must be evaluated before!}
+		\item[b] set $t \leftarrow t+1$;
+	\end{itemize}
+	\item compute the time-averaged estimator:	 	$$
+		H_{k:m}(X,Y)
+		= \frac{1}{m-k+1}\sum_{l=k}^{m}h(X_l) $$
+		$$
+		+ \sum_{l=k+1}^{\tau -1}\min(1, \frac{l-k}{m-k+1})\{h(X_l)-h(Y_{l-1})\} .
+		$$
+	
+\end{enumerate}
+
+	Metropolis--Hasting algorithm allow us to calculate the coupled kernel $\bar P \{(X_t, Y_{t-1}), \cdot \}$:
+	
+	\begin{enumerate}
+		\item sample $(X^\star, Y^\star) | (X_t, Y_{t-1})$ from a maximal coupling of $q(X_t, \cdot)$ and $q(Y_{t-1}, \cdot)$;
+		\item sample $U \sim \mathcal{U}([0,1])$;
+		\item if
+		$$ U
+		\leq \min\bigg \{
+		1,
+		\frac{ \pi(X^\star)q(X^\star,X_t)}{
+			\pi(X_t)q(X_t, X^\star)}
+		\bigg \}
+		$$
+		then $X_{t+1} = X^\star$; otherwise $X_t = X_{t-1}$;
+		\item if
+		$$ U
+		\leq \min\bigg \{ 
+		1,
+		\frac{ \pi(Y^\star)q(Y^\star,Y_t)}{
+			\pi(Y_t)q(Y_t, Y^\star)}
+		\bigg \}
+		$$
+		then $Y_{t+1} = Y^\star$; otherwise $Y_t = Y_{t-1}$.
+		
+	\end{enumerate}
+
+
+
+
+coupling of random walk mh chains
+
+
+
+efficiency, parallel
+
+\subsection{Approximate Bayesian Computation}
+
+
+
 
 
 Text requiring further explanation\footnote{Example footnote}.
 
 %------------------------------------------------
+\section{Implementation}
 
 \section{Results}
 
